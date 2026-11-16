@@ -36,9 +36,9 @@ section{padding:75px 0}.sectionhead{display:flex;justify-content:space-between;a
 .card:hover .real-art{transform:scale(1.085) rotate(-2deg)}
 .zoom-btn{position:absolute;right:10px;top:10px;z-index:3;background:#0a152bcc;color:#fff;border:1px solid #7792b2;border-radius:100%;width:34px;height:34px;font-size:17px;display:grid;place-items:center;backdrop-filter:blur(5px)}
 .zoom-btn:hover{background:#ffdb1e;color:#071425}.sticker-badge{z-index:3;position:absolute;left:10px;top:10px;font-size:10px;font-weight:900;color:#061529;background:#ffdb1e;padding:4px 9px;border-radius:30px;text-transform:uppercase}
-.sticker-badge.preview{color:#fff;background:#426080}.card-bottom{padding:14px}.card-title{font-size:13px;line-height:1.3;font-weight:900;min-height:39px;display:flex;align-items:center}
+.card-bottom{padding:14px}.card-title{font-size:13px;line-height:1.3;font-weight:900;min-height:39px;display:flex;align-items:center}
 .card-meta{margin:8px 0 11px}.card-meta b{color:#ffe146}.qtybar{height:43px}.qtybar button{width:46px}.qtybar span{font-size:16px}
-.preview-note{color:#a5bbd7;border:1px dashed #5c718e;background:#1b2e49;border-radius:10px;padding:9px;font-size:11px;min-height:43px;text-align:center}
+
 .selected-art{width:35px;height:35px;object-fit:contain;filter:drop-shadow(0 2px 4px #0006);flex-shrink:0}
 .selected-item{display:flex;align-items:center;gap:9px;border-bottom:1px solid #243754;padding:6px 0}.selected-item b{font-size:11px;flex:1}.selected-item span{font-size:11px;font-weight:900;color:#ffda1f}
 .sticker-lightbox[hidden],.mobile-cart[hidden]{display:none!important}
@@ -145,4 +145,4 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
 .ath-card-number{font:900 27px 'Barlow Condensed';letter-spacing:.05em}.ath-card-sub{font-size:11px;color:#596a7e;text-align:center}.ath-card-link{font-weight:900;font-size:12px;color:#0c57ab;text-decoration:underline;margin-top:5px}
 @media(max-width:770px){.support-shell,.personal-shell{grid-template-columns:1fr}.support-strip{padding:27px 0}.support-visual{display:none}.support-copy h2{font-size:clamp(44px,10vw,70px)}.personal-panel{padding:42px 0}.ath-card{justify-self:start}.support-actions .support-cta{flex:1}}
 @media(prefers-reduced-motion:reduce){.support-ring{animation:none}.support-cta:hover{transform:none}}
-.gift-note{display:inline-block;border:2px solid #ffe12e;color:#ffe94d;background:#133568;padding:10px 14px;border-radius:11px;font-weight:900;font-size:12px;line-height:1.5;margin:0 0 16px;text-transform:uppercase}
+.gift-note{display:inline-block;border:2px solid #ffe12e;color:#ffe94d;background:#133568;padding:10px 14px;border-radius:11px;font-weight:900;font-size:12px;line-height:1.5;margin:0 0 16px;text-transform:uppercase}.ath-message-cta{margin:20px 0 17px;padding:16px 18px;border:2px solid #ffe023;border-radius:16px;background:linear-gradient(115deg,#1d3981,#102653);box-shadow:0 10px 25px #0004}.ath-message-cta strong{font:900 22px "Barlow Condensed",sans-serif;color:#ffe93e}.ath-message-cta p{color:#f1f7ff;font-size:12px;line-height:1.5;margin:7px 0 13px}.ath-message-cta .support-cta{background:#ffe52d;color:#081529;font-size:11px;padding:10px 17px;min-height:40px}
