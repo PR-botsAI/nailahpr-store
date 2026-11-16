@@ -684,13 +684,31 @@ document.getElementById('payNow').addEventListener('click',async function(){
  if(c!==pack||!deliveryReady()||!em.checkValidity()||document.getElementById('customerName').value.trim().length<2){document.getElementById('stripeStatus').textContent=nailahLang==='en'?'Complete the pack, delivery details and valid email first.':'Completa tu pack, la entrega y un correo válido primero.';return;}
  if(deliveryMethod==='shipping'&&!['shipName','shipLine','shipCity','shipZip'].every(function(id){return document.getElementById(id).value.trim().length>0;})){document.getElementById('stripeStatus').textContent='Completa la dirección de envío.';return;}
  if(typeof window.__processDonation!=='function'){document.getElementById('stripeStatus').textContent=nailahLang==='en'?'Secure payment is not available yet. Use the order request form.':'El pago seguro aún no está disponible. Usa el formulario de pedido.';return;}
- var items=products.filter(function(p){return qty[p.id]>0;}).map(function(p){return {name:p.name,sku:p.file,quantity:qty[p.id]};});
- var details='CLIENTE / BUYER: '+document.getElementById('customerName').value.trim()+'\nEMAIL: '+em.value.trim()+'\n'+summary();
+ // PAYMEGPT CHECKOUT: use only the supported payment fields. The prior
+ // unpriced items array was interpreted as cart line items and could not
+ // produce a valid Checkout Session.
+ var orderSummary=summary();
+ var customer=document.getElementById('customerName').value.trim();
+ var email=em.value.trim();
+ var orderTitle='NailahPR '+pack+' stickers · '+(deliveryMethod==='pickup'?'Recogido':'Envío');
+ var note='Orden: '+pack+' stickers. '+(deliveryMethod==='pickup'?'Recogido '+document.getElementById('pickupSlot').value:'Envío '+document.getElementById('shipRegion').value+' $5')+'.';
+ if(deliveryMethod==='shipping'){
+  note+=' Destino: '+document.getElementById('shipCity').value.trim()+' / '+document.getElementById('shipZip').value.trim()+'.';
+ }
+ // Avoid sending unpriced product line items, arbitrary shipping objects
+ // and large unstructured custom fields to the donation endpoint.
  try{
-  this.disabled=true;document.getElementById('stripeStatus').textContent=nailahLang==='en'?'Opening secure Stripe checkout...':'Abriendo pago seguro de Stripe...';
-  var args={amount:amount,email:em.value.trim(),name:document.getElementById('customerName').value.trim(),productName:'NailahPR · Pack '+pack+' stickers'+(deliveryMethod==='shipping'?' + envío':' + recogido'),productDescription:'Stickers impresos, compra de mercancía; diseño individual en el mensaje de pedido',description:details,message:details,items:items,shipping:deliveryMethod,shippingAddress:deliveryMethod==='shipping'?{name:document.getElementById('shipName').value.trim(),line1:document.getElementById('shipLine').value.trim(),city:document.getElementById('shipCity').value.trim(),postal_code:document.getElementById('shipZip').value.trim(),country:document.getElementById('shipRegion').value==='US'?'US':'PR'}:null};
-  await window.__processDonation(args);
- }catch(e){document.getElementById('stripeStatus').textContent=nailahLang==='en'?'Stripe checkout could not open. Please try again or use the order form.':'No se pudo abrir Stripe. Intenta de nuevo o utiliza el formulario de pedido.';update();}
+  this.disabled=true;
+  document.getElementById('stripeStatus').textContent=nailahLang==='en'?'Creating secure payment session…':'Creando sesión de pago seguro…';
+  await window.__processDonation({
+   amount:Number(amount.toFixed(2)),
+   email:email,
+   productName:orderTitle,
+   item_name:orderTitle,
+   message:note
+  });
+
+ }catch(e){document.getElementById('stripeStatus').textContent=nailahLang==='en'?'Payment session could not be created. No payment has been confirmed. You can submit a request instead.':'No se pudo crear la sesión de pago. No hay pago confirmado. Puedes enviar una solicitud de pedido.';update();}
 });
 
 document.getElementById('year').textContent=new Date().getFullYear();
