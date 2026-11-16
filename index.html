@@ -47,6 +47,66 @@
 }catch(e){}})();
 </script>
 
+<script data-gate>
+(function(){
+  var slug='lp-mwibl7t3-pgaty';var apiBase='https://paymegpt.com';var currency='USD';var presets=[200,700,800,1200,1300,1700,2700,3200];var minAmt=200;var maxAmt=3200;var thankYouMsg='¡Gracias por apoyar a NailahPR! Confirma que tu selección y datos de entrega estén registrados. Pronto recibirás información sobre tu pedido.';
+  var successSubtext='¡Gracias por apoyar la temporada de Nailah! Te enviaremos los detalles del pedido.';var successBtnLabel='Volver a la tienda';var successBtnColor='#1677ff';var successRedirect='';
+  function getLang(){var l=(document.documentElement.lang||navigator.language||'en').toLowerCase();return l.split('-')[0];}
+  function getLocale(){return (document.documentElement.lang||navigator.language||'en');}
+  var I18N={en:{min:'Minimum is ',max:'Maximum is ',emailPrompt:'Enter your email for the receipt:',emailRequired:'An email address is required to complete checkout.',failed:'Failed to process donation'},fr:{min:'Le minimum est ',max:'Le maximum est ',emailPrompt:'Entrez votre adresse e-mail pour le reçu :',emailRequired:'Une adresse e-mail est requise pour finaliser le paiement.',failed:'Échec du traitement du don'},es:{min:'El mínimo es ',max:'El máximo es ',emailPrompt:'Introduce tu correo electrónico para el recibo:',emailRequired:'Se requiere una dirección de correo electrónico para completar el pago.',failed:'No se pudo procesar la donación'},pt:{min:'O mínimo é ',max:'O máximo é ',emailPrompt:'Insira seu e-mail para o recibo:',emailRequired:'Um endereço de e-mail é necessário para concluir o pagamento.',failed:'Falha ao processar a doação'},de:{min:'Mindestbetrag ist ',max:'Höchstbetrag ist ',emailPrompt:'Geben Sie Ihre E-Mail-Adresse für die Quittung ein:',emailRequired:'Eine E-Mail-Adresse ist erforderlich, um den Checkout abzuschließen.',failed:'Spende konnte nicht verarbeitet werden'},it:{min:'Il minimo è ',max:'Il massimo è ',emailPrompt:'Inserisci la tua email per la ricevuta:',emailRequired:"È richiesto un indirizzo email per completare il pagamento.",failed:'Impossibile elaborare la donazione'}};
+  function t(k){var L=getLang();return (I18N[L]&&I18N[L][k])||I18N.en[k];}
+  function fmtD(c){try{return new Intl.NumberFormat(getLocale(),{style:'currency',currency:currency}).format(c/100);}catch(e){return new Intl.NumberFormat('en-US',{style:'currency',currency:currency}).format(c/100);}}
+  function findDonEmail(){var ids=['email','emailAddress','buyer-email','buyerEmail','donor-email','donorEmail','user-email','userEmail','contact-email'];for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el&&el.value&&el.value.indexOf('@')>-1)return el.value.trim();}var inputs=document.querySelectorAll('input[type="email"],input[name*="email"],input[placeholder*="email"],input[placeholder*="Email"]');for(var j=0;j<inputs.length;j++){if(inputs[j].value&&inputs[j].value.indexOf('@')>-1)return inputs[j].value.trim();}return '';}
+  function findDonName(){var ids=['name','fullName','full-name','donor-name','donorName','customer-name','user-name'];for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el&&el.value)return el.value.trim();}var inputs=document.querySelectorAll('input[name*="name"]:not([name*="email"]):not([type="email"]),input[placeholder*="name"]:not([placeholder*="email"]):not([type="email"])');for(var j=0;j<inputs.length;j++){if(inputs[j].value)return inputs[j].value.trim();}return '';}
+  function findDonPhone(){var ids=['phone','phoneNumber','phone-number','tel','telephone','mobile','mobileNumber','cell','contact-phone','buyer-phone'];for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el&&el.value&&el.value.trim())return el.value.trim();}var inputs=document.querySelectorAll('input[type="tel"],input[name*="phone"],input[name*="tel"],input[name*="mobile"],input[placeholder*="phone"],input[placeholder*="Phone"]');for(var j=0;j<inputs.length;j++){if(inputs[j].value&&inputs[j].value.trim())return inputs[j].value.trim();}return '';}
+  window.__processDonation=function(a,b,c,d){
+    var amountCents,email='',donorName='',donorMessage='',productName='',productDescription='',quantity=1;
+    if(a&&typeof a==='object'){
+      amountCents=a.amountCents||(a.amount?Math.round(Number(a.amount)*100):0);
+      email=a.email||'';
+      productName=a.productName||a.label||'';
+      productDescription=a.productDescription||a.description||'';
+      donorName=a.name||a.donorName||'';
+      donorMessage=a.message||a.donorMessage||'';
+      quantity=a.quantity&&parseInt(a.quantity,10)>0?parseInt(a.quantity,10):1;
+    }else{
+      amountCents=typeof a==='number'?a:(parseInt(a,10)||0);
+      var rest=[b,c,d];var nonEmail=[];
+      for(var i=0;i<rest.length;i++){var v=rest[i];if(typeof v==='string'&&v){if(!email&&v.indexOf('@')>-1&&/^[^s@]+@[^s@]+.[^s@]+$/.test(v.trim())){email=v.trim();}else{nonEmail.push(v);}}}
+      donorName=nonEmail[0]||'';donorMessage=nonEmail[1]||'';
+    }
+    if(!email)email=findDonEmail();
+    if(!donorName)donorName=findDonName();
+    var donorPhone=findDonPhone();
+    if(!amountCents||amountCents<minAmt){alert(t('min')+fmtD(minAmt));return Promise.reject('below_min');}
+    if(amountCents>maxAmt){alert(t('max')+fmtD(maxAmt));return Promise.reject('above_max');}
+    if(!email){var p=window.prompt(t('emailPrompt'),'');if(p&&p.indexOf('@')>-1){email=p.trim();}else{alert(t('emailRequired'));return Promise.reject('no_email');}}
+    var successBase=window.location.href.split('?')[0];
+    return fetch(apiBase+'/api/landing-pages/public/'+slug+'/donation/checkout',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:email,name:donorName||'',phone:donorPhone||'',amountCents:amountCents,message:donorMessage||'',productName:productName||'',productDescription:productDescription||'',quantity:quantity,locale:getLocale(),successUrl:successBase+'?donation=success&email='+encodeURIComponent(email)+'&session_id={CHECKOUT_SESSION_ID}',cancelUrl:successBase+'?donation=cancelled'})
+    }).then(function(r){return r.json();}).then(function(d){
+      if(d.checkoutUrl){window.location.href=d.checkoutUrl;}
+      else{alert(d.error||t('failed'));throw new Error(d.error);}
+    });
+  };
+  window.__donationConfig={currency:currency,presets:presets.map(function(c){return c/100;}),minAmount:minAmt/100,maxAmount:maxAmt/100,formatAmount:fmtD};
+  document.addEventListener('DOMContentLoaded',function(){
+    var urlParams=new URLSearchParams(window.location.search);
+    if(urlParams.get('donation')==='success'){
+      var sidD=urlParams.get('session_id');
+      if(sidD){try{fetch(apiBase+'/api/landing-pages/public/'+slug+'/checkout/confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:sidD})}).catch(function(){});}catch(e){}}
+      var overlay=document.createElement('div');overlay.id='donation-success-overlay';
+      overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:999999;font-family:system-ui,-apple-system,sans-serif;';
+      function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+      overlay.innerHTML='<div style="background:white;border-radius:16px;padding:40px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.15);"><div style="width:64px;height:64px;border-radius:50%;background:#dcfce7;background:color-mix(in srgb,'+successBtnColor+' 12%,white);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="'+successBtnColor+'" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><h2 style="margin:0 0 12px;font-size:24px;font-weight:700;color:#111827;">'+esc(thankYouMsg)+'</h2><p style="margin:0 0 24px;color:#6b7280;font-size:16px;">'+esc(successSubtext)+'</p><button id="lp-don-success-btn" style="padding:12px 32px;font-size:16px;font-weight:600;background:'+successBtnColor+';color:white;border:none;border-radius:8px;cursor:pointer;">'+esc(successBtnLabel)+'</button></div>';
+      document.body.appendChild(overlay);
+      var dBtn=document.getElementById('lp-don-success-btn');
+      if(dBtn){dBtn.addEventListener('click',function(){if(successRedirect){window.location.href=successRedirect;}else{overlay.remove();window.history.replaceState({},'',window.location.pathname);}});}
+    }
+  });
+})();
+</script>
 <script data-field-replace>
 (function(){
   var params=new URLSearchParams(window.location.search);
@@ -175,7 +235,7 @@
 (function(){
   var slug='WmZ439';
   var apiBase='https://paymegpt.com';
-  var successSubtext='';var successBtnLabel='Continue';var successBtnColor='#16a34a';var successRedirect='';
+  var successSubtext='¡Gracias por apoyar la temporada de Nailah! Te enviaremos los detalles del pedido.';var successBtnLabel='Volver a la tienda';var successBtnColor='#1677ff';var successRedirect='';
   function findEmail(){
     var ids=['email','emailAddress','buyer-email','buyerEmail','user-email','userEmail','checkout-email','customer-email','contact-email'];
     for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el&&el.value&&el.value.includes('@'))return el.value.trim();}
@@ -239,7 +299,7 @@
 (function(){
   var slug='WmZ439';
   var apiBase='https://paymegpt.com';
-  var successSubtext='';var successBtnLabel='Continue';var successBtnColor='#16a34a';var successRedirect='';
+  var successSubtext='¡Gracias por apoyar la temporada de Nailah! Te enviaremos los detalles del pedido.';var successBtnLabel='Volver a la tienda';var successBtnColor='#1677ff';var successRedirect='';
   function findCartEmail(){
     var ids=['email','emailAddress','buyer-email','buyerEmail','user-email','userEmail','checkout-email','customer-email','contact-email'];
     for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el&&el.value&&el.value.includes('@'))return el.value.trim();}
@@ -316,10 +376,10 @@
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="width:0;height:0;position:absolute" aria-hidden="true"><symbol id="vb" viewBox="0 0 200 200"><circle cx="100" cy="100" r="88" fill="#fff" stroke="#071325" stroke-width="11"/><path d="M100 12C165 34 180 65 161 100c-22-22-58-31-102-24C61 40 78 23 100 12Z" fill="#ffdb25" stroke="#071325" stroke-width="8"/><path d="M161 100c22 38 13 62-24 79-3-45-18-74-54-92 34-8 58-3 78 13Z" fill="#1685ff" stroke="#071325" stroke-width="8"/><path d="M137 179c-49 15-85-7-107-48 41 1 74-10 94-36-6 36 1 65 13 84Z" fill="#ffdb25" stroke="#071325" stroke-width="8"/><path d="M30 131C9 91 31 39 59 25c-6 46 5 78 37 101-31-2-52 0-66 5Z" fill="#1685ff" stroke="#071325" stroke-width="8"/></symbol></svg>
-<div class="ticker">💙💛 ENTREGA GRATIS EN ARECIBO / PRÁCTICAS · ENVÍO PR $5 · 2–3 DÍAS LABORABLES ESTIMADOS</div>
-<header><div class="wrap nav"><a href="#inicio" class="brand" aria-label="Nailah PR home">NAILAH<em>PR</em><span style="font-size:11px;vertical-align:top"> ✦</span></a><nav class="navlinks" aria-label="Navegación"><a href="#coleccion">Stickers</a><a href="#armatu">Arma tu pack</a><a href="#historia">Nuestra misión</a><a href="#preguntas">Preguntas</a></nav><a class="navcta" href="#armatu">ARMA TU PACK ↗</a></div></header>
+<div class="ticker">💙💛 ENVÍOS PR + EE. UU. $5 · RECOGIDO ARECIBO GRATIS · ESTIMADOS SEGÚN DESTINO</div>
+<header><div class="wrap nav"><a href="#inicio" class="brand" aria-label="Nailah PR home">NAILAH<em>PR</em><span style="font-size:11px;vertical-align:top"> ✦</span></a><nav class="navlinks" aria-label="Navegación"><a href="#coleccion">Stickers</a><a href="#armatu">Arma tu pack</a><a href="#historia">Nuestra misión</a><a href="#preguntas">Preguntas</a></nav><div class="lang-toggle" role="group" aria-label="Idioma / Language"><button type="button" data-lang="es" aria-pressed="true" class="lang-active">ES</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div><a class="navcta" href="#armatu">ARMA TU PACK ↗</a></div></header>
 <main>
-<section class="hero" id="inicio" data-section="hero"><div class="wrap hero-inner"><div><div class="eyebrow">NailahPR • Volleyball spirit shop</div><h1 class="display">LA CANCHA<br><span class="outline">TIENE</span><br><span class="yellow">ACTITUD.</span></h1><p>Stickers con flow boricua, energía de voleibol y un propósito especial: apoyar los gastos de la temporada de Nailah. Escoge tus diseños favoritos. Hazlo tuyo. 💙💛</p><div class="hero-buttons"><a class="btn btn-primary" href="#armatu">ESCOGE TUS 10 — $12 ↗</a><a class="btn btn-outline" href="#coleccion">VER LA COLECCIÓN ↓</a></div><div class="pills"><span class="pill">✦ Diseños originales</span><span class="pill">💙 Hecho con orgullo en PR</span><span class="pill">📦 Envíos PR $5</span><span class="pill">📍 Recogido GRATIS</span><span class="pill">✨ Tamaño ~2.5″</span></div></div><div class="hero-art" role="img" aria-label="Ilustración original de balón de voleibol azul, blanco y amarillo"><div class="hero-circle"><svg viewBox="0 0 200 200"><use href="#vb"/></svg></div><div class="floating-tag one">11U MIRELYS</div><div class="floating-tag two">¡PUNTO!</div><span class="spark a">✦</span><span class="spark b">⚡</span></div></div></section>
+<section class="hero" id="inicio" data-section="hero"><div class="wrap hero-inner"><div><div class="eyebrow">NailahPR • Volleyball spirit shop</div><h1 class="display">LA CANCHA<br><span class="outline">TIENE</span><br><span class="yellow">ACTITUD.</span></h1><p>Stickers con flow boricua, energía de voleibol y un propósito especial: apoyar los gastos de la temporada de Nailah. Escoge tus diseños favoritos. Hazlo tuyo. 💙💛</p><div class="hero-buttons"><a class="btn btn-primary" href="#armatu">ESCOGE TUS 10 — $12 ↗</a><a class="btn btn-outline" href="#coleccion">VER LA COLECCIÓN ↓</a></div><div class="pills"><span class="pill">✦ Diseños originales</span><span class="pill">💙 Hecho con orgullo en PR</span><span class="pill">📦 PR + EE. UU. $5</span><span class="pill">📍 Recogido GRATIS</span><span class="pill">✨ Tamaño ~2.5″</span></div></div><div class="hero-art" role="img" aria-label="Ilustración original de balón de voleibol azul, blanco y amarillo"><div class="hero-circle"><svg viewBox="0 0 200 200"><use href="#vb"/></svg></div><div class="floating-tag one">11U MIRELYS</div><div class="floating-tag two">¡PUNTO!</div><span class="spark a">✦</span><span class="spark b">⚡</span></div></div></section>
 <div class="stats" aria-label="Ofertas"><div class="stat"><strong>$2</strong><span>STICKER INDIVIDUAL</span></div><div class="stat"><strong>$8</strong><span>ESCOGE CUALQUIER 5</span></div><div class="stat"><strong>$12</strong><span>ESCOGE CUALQUIER 10</span></div></div>
 <section class="collection" id="coleccion" data-section="collection"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">DROP NAILAHPR · 2026–2027</div><h2 class="display">STICKERS CON<br>PERSONALIDAD</h2></div><p>La colección real de nuestros stickers: orgullo boricua, voleibol, 11U Mirelys y apoyo a Nailah #8. Escoge los tuyos y repite tus favoritos.</p></div><div class="shop-tools">
   <div class="shop-topline"><span class="eyebrow" id="photoCount">CARGANDO COLECCIÓN...</span><span class="live-note">Fotos reales · directo de GitHub</span></div>
@@ -340,13 +400,13 @@
     <h3 id="lightboxName"></h3><p>Vista digital · consulta tamaño y acabado final antes de comprar</p>
   </div>
 </div><p class="section-note" style="margin-top:21px">Las imágenes aquí son archivos reales del repositorio de GitHub. Impresión propuesta: aprox. 2.5″ de ancho; acabado sujeto a prueba. Los diseños con marcas o nombres oficiales de torneos se muestran como vista previa y no están disponibles para pedido hasta verificar permisos.</p></div></section>
-<section class="builder" id="armatu" data-section="builder"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">Tú mandas en tu pack</div><h2 class="display">¡ARMA TU PACK!</h2></div><p>Usa los botones + y − de las tarjetas para escoger tus diseños. Puedes repetir cualquiera.</p></div><div class="builder-layout"><div><h3 style="margin:0;font-size:15px">1. Escoge el tamaño</h3><div class="pack-options" role="group" aria-label="Tipo de paquete"><button class="packopt" data-pack="1"><strong>1</strong><span>$2 · UNO SOLO</span></button><button class="packopt" data-pack="5"><strong>5</strong><span>$8 · MINI PACK</span></button><button class="packopt active" data-pack="10"><strong>10</strong><span>$12 · FAVORITO</span></button><button class="packopt" data-pack="25"><strong>25</strong><span>$27 · TEAM PACK</span></button></div><h3 style="font-size:15px;margin:20px 0 10px">2. Selecciona stickers en la colección</h3><div class="progress" aria-label="Progreso del pack"><b id="progress"></b></div><div class="counter"><span id="progresslabel">0 de 10 seleccionados</span><button id="clear" style="color:#fee244;background:none;border:0;font-weight:800;font-size:12px">Limpiar selección</button></div><div class="selection" id="selection">Tus stickers seleccionados aparecerán aquí.</div></div><aside class="builder-aside"><span class="eyebrow">Tu paquete</span><h3>LIST@ PARA<br>LA CANCHA</h3><div class="price" id="price">$12</div><p>Elige tus stickers y cómo recibirlos. Se suman $5 solo cuando escoges envío dentro de Puerto Rico.</p><button id="goOrder" class="btn btn-primary" disabled>ESCOGE 10 PARA SEGUIR</button>
+<section class="builder" id="armatu" data-section="builder"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">Tú mandas en tu pack</div><h2 class="display">¡ARMA TU PACK!</h2></div><p>Usa los botones + y − de las tarjetas para escoger tus diseños. Puedes repetir cualquiera.</p></div><div class="builder-layout"><div><h3 style="margin:0;font-size:15px">1. Escoge el tamaño</h3><div class="pack-options" role="group" aria-label="Tipo de paquete"><button class="packopt" data-pack="1"><strong>1</strong><span>$2 · UNO SOLO</span></button><button class="packopt" data-pack="5"><strong>5</strong><span>$8 · MINI PACK</span></button><button class="packopt active" data-pack="10"><strong>10</strong><span>$12 · FAVORITO</span></button><button class="packopt" data-pack="25"><strong>25</strong><span>$27 · TEAM PACK</span></button></div><h3 style="font-size:15px;margin:20px 0 10px">2. Selecciona stickers en la colección</h3><div class="progress" aria-label="Progreso del pack"><b id="progress"></b></div><div class="counter"><span id="progresslabel">0 de 10 seleccionados</span><button id="clear" style="color:#fee244;background:none;border:0;font-weight:800;font-size:12px">Limpiar selección</button></div><div class="selection" id="selection">Tus stickers seleccionados aparecerán aquí.</div></div><aside class="builder-aside"><span class="eyebrow">Tu paquete</span><h3>LIST@ PARA<br>LA CANCHA</h3><div class="price" id="price">$12</div><p>Elige tus stickers y cómo recibirlos. Se suman $5 solo cuando escoges envío a Puerto Rico o Estados Unidos.</p><button id="goOrder" class="btn btn-primary" disabled>ESCOGE 10 PARA SEGUIR</button>
 <div class="delivery-container" id="deliverySelector">
   <div class="delivery-title"><span class="delivery-step">03</span><div><span class="eyebrow">Tu pedido, a tu manera</span><h4>¿Cómo quieres recibirlo?</h4></div></div>
   <div class="delivery-options" role="radiogroup" aria-label="Escoge el método de entrega">
    <label class="delivery-option" id="shippingLabel">
     <input type="radio" name="deliveryOption" value="shipping" id="deliverShip">
-    <span class="delivery-option-ico" aria-hidden="true">📦</span><span class="delivery-option-copy"><strong>Envío a domicilio</strong><small>Puerto Rico · 2–3 días laborables estimados tras despacho</small></span><span class="delivery-option-cost">+$5</span>
+    <span class="delivery-option-ico" aria-hidden="true">📦</span><span class="delivery-option-copy"><strong>Envío a domicilio</strong><small>Puerto Rico o Estados Unidos · tarifa fija</small></span><span class="delivery-option-cost">+$5</span>
    </label>
    <label class="delivery-option" id="pickupLabel">
     <input type="radio" name="deliveryOption" value="pickup" id="deliverPickup">
@@ -354,8 +414,8 @@
    </label>
   </div>
   <div id="shipDetails" class="delivery-details" hidden>
-   <span class="detail-caption">📦 Envío en Puerto Rico</span>
-   <p>Tarifa fija de <strong>$5 por pedido</strong>. Estimado de entrega: <strong>2–3 días laborables desde el despacho</strong>, no garantizados. Dirección completa se solicita en el formulario. Destinos fuera de Puerto Rico requieren cotización aparte.</p>
+   <span class="detail-caption">📦 Envío PR + Estados Unidos</span>
+   <label for="shipRegion" class="pickup-select-label">Destino del envío / Shipping destination</label><select id="shipRegion" aria-label="Destino del envío"><option value="PR">Puerto Rico (PR)</option><option value="US">Estados Unidos / United States</option></select><p>Tarifa fija de <strong>$5 por pedido</strong> para Puerto Rico y los 50 estados de EE. UU. El estimado de <strong>2–3 días laborables tras el despacho</strong> corresponde a Puerto Rico y no es una garantía. Para EE. UU., el plazo depende del código postal y del transportista; se confirma al gestionar el pedido. Las direcciones se solicitan en el formulario.</p>
   </div>
   <div id="pickupDetails" class="delivery-details" hidden>
    <label for="pickupSlot" class="pickup-select-label">Selecciona el lugar / día de recogido</label>
@@ -369,19 +429,57 @@
    <label class="pickup-check"><input type="checkbox" id="pickupAck"><span>Entiendo las condiciones de recogido local y el cargo de $5 si posteriormente se aprueba un envío.</span></label>
   </div>
   <p class="delivery-hint" id="deliveryHint" aria-live="polite">Selecciona una opción para calcular tu total.</p>
-  <div class="order-total"><div><span>Subtotal de stickers</span><strong id="summarySubtotal">$12.00</strong></div><div><span>Entrega</span><strong id="summaryDelivery">Por elegir</strong></div><div class="order-final"><span>Total estimado*</span><strong id="summaryTotal">—</strong></div><small>*Antes de IVU aplicable. Precios de prueba; no se acepta pago desde esta página.</small></div>
+  <div class="order-total"><div><span>Subtotal de stickers</span><strong id="summarySubtotal">$12.00</strong></div><div><span>Entrega</span><strong id="summaryDelivery">Por elegir</strong></div><div class="order-final"><span>Total estimado*</span><strong id="summaryTotal">—</strong></div><small>*No se añade IVU por separado a este estimado. La obligación fiscal se revisará antes de activar cobros. Esta página aún no procesa pagos.</small></div><div class="checkout-panel" id="checkoutPanel" data-section="checkout">
+ <div class="checkout-header"><span aria-hidden="true">🔒</span><div><strong>PAGO SEGURO CON STRIPE</strong><p>Tarjetas de crédito y débito. Klarna disponible únicamente si Stripe lo ofrece para tu compra.</p></div></div>
+ <label for="email" class="checkout-label">Correo electrónico para recibo / Email for receipt</label>
+ <input id="email" name="customer_email" type="email" autocomplete="email" required placeholder="tu@correo.com">
+ <div id="shippingAddressGroup" class="shipping-address" hidden>
+  <strong class="shipping-address-title">📦 Dirección para recibir tus stickers</strong>
+  <label for="shipName">Nombre completo / Full name</label><input id="shipName" autocomplete="name" placeholder="Nombre y apellido">
+  <label for="shipLine">Dirección / Street address</label><input id="shipLine" autocomplete="shipping street-address" placeholder="Calle, número, apartamento">
+  <div class="ship-row"><div><label for="shipCity">Pueblo / City</label><input id="shipCity" autocomplete="shipping address-level2" placeholder="Ciudad"></div><div><label for="shipZip">ZIP / Código postal</label><input id="shipZip" autocomplete="shipping postal-code" placeholder="00612"></div></div>
+  <p>El destinatario y dirección serán incluidos en tu resumen de pedido. El pago se procesa mediante Stripe; el despacho se confirmará por correo.</p>
+ </div>
+ <div class="checkout-calc"><span>Tu total</span><strong id="stripeAmount">—</strong></div>
+ <button id="payNow" type="button" class="stripe-pay" disabled><span aria-hidden="true">🔒</span><span id="payNowText">ESCOGE TU PACK Y ENTREGA</span></button>
+ <p id="stripeStatus" class="stripe-status" role="status">Pago procesado de forma segura por Stripe. No ingreses datos de tu tarjeta en el chat.</p>
+ <p class="checkout-fineprint">No se añadirá IVU en el estimado mostrado. Si hay alguna obligación de recaudo, se deberá resolver conforme a la ley antes de completar ventas. Los stickers son de ~2.5 pulgadas de ancho; el alto varía por diseño.</p>
+ <p class="checkout-fineprint">¿Prefieres confirmar primero? <a href="#contacto">Solicita tu pedido sin pagar ahora.</a></p>
+</div>
  </div>
 <p class="smallprint">Esta es una solicitud de pedido, no una compra ni pago confirmado. Aún estamos validando producción y envío.</p><a href="#contacto" style="font-size:12px;color:#9fcfff;text-decoration:underline">¿Pedidos especiales o de equipo?</a></aside></div></div></section>
 <section class="story" id="historia" data-section="mission"><div class="wrap story-layout"><div><div class="eyebrow">Más que stickers</div><h2 class="display">UN SUEÑO.<br>MUCHAS<br>GANAS.</h2><p>NailahPR es un proyecto independiente de mercancía diseñado para ayudar a cubrir los gastos personales de la temporada de voleibol 2026–2027 de Nailah. Cada compra de stickers es una forma divertida de mostrar apoyo.</p><p><strong>Importante:</strong> no somos la tienda oficial del club ni representamos al Club Arsenal. Nuestros diseños son originales y no utilizan el escudo oficial. Las compras no son donaciones benéficas deducibles.</p><a class="btn btn-primary" href="#armatu">QUIERO APOYAR ↗</a></div><div class="story-card"><div style="font-size:40px">💙💛</div><strong>JUGAMOS<br>CON TODO.<br>APOYAMOS<br>CON MÁS.</strong><small>NAILAHPR • ARECIBO, PR • 2026–2027</small></div></div></section>
 <section class="future" data-section="coming-soon"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">Próximamente · En evaluación</div><h2 class="display">MÁS FLOW<br>DE GAME DAY.</h2></div><p>Estamos evaluando accesorios y especiales. No aparecen como productos disponibles hasta comprobar seguridad, proveedores y costos.</p></div><div class="future-grid"><article class="futurecard"><div class="emoji">🎀</div><h3>Hair Game</h3><p>Moños, scrunchies y accesorios azul y amarillo.</p><small>Próximamente</small></article><article class="futurecard"><div class="emoji">🏐</div><h3>Bag Charms</h3><p>Colgantes y accesorios con vibra de voleibol.</p><small>Próximamente</small></article><article class="futurecard"><div class="emoji">✨</div><h3>Game-Day Shine</h3><p>Opciones brillantes para peinados, tras verificar cumplimiento cosmético.</p><small>En evaluación</small></article></div></div></section>
-<section class="contact" id="contacto" data-section="order-request"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">Solicitud de pedido</div><h2 class="display">PÍDELO CON<br>TU FLOW.</h2></div><p>Estamos en prelaunch. Envío Puerto Rico $5 o recogido local GRATIS. Copia tu selección y solicita confirmación de disponibilidad e IVU antes de cobrar.</p></div><div class="form-layout"><div class="instructions"><strong>¿Cómo funciona?</strong><ol><li>Escoge arriba tu paquete, diseños y método de entrega: $5 envío PR o recogido local gratis.</li><li>Si eliges recogido local, indica lunes, miércoles o Arecibo y acepta el aviso importante.</li><li>Presiona «Copiar mi selección» y guarda el resumen con el total estimado.</li><li>Pega ese resumen en el campo «Selección exacta» del formulario.</li><li>En el formulario, selecciona el mismo método de entrega e incluye dirección postal SOLO si escoges envío. Te confirmaremos disponibilidad e IVU antes de cualquier cobro.</li></ol><label for="summaryText" style="font-size:12px;font-weight:800">Tu selección (cópiala al formulario)</label><textarea readonly id="summaryText" class="summary-box">Escoge tus stickers para generar tu resumen.</textarea><button id="copy" class="copybtn" type="button">📋 COPIAR MI SELECCIÓN</button><p id="copyStatus" role="status" style="font-size:11px;color:#d2e2fa"></p></div><div><script src="https://paymegpt.com/forms-embed.js" data-form="13sgccfa" data-theme="dark" data-accent="#1677ff" data-accent2="#ffda1f" data-bg="#0a1322" data-surface="#111e36" data-field="#192841" data-text="#f9fbff" data-gradient="0" async></script><noscript><a href="https://paymegpt.com/forms/13sgccfa">Abrir solicitud de pedido</a></noscript><p style="font-size:12px">Si el formulario no carga: <a href="https://paymegpt.com/forms/13sgccfa" target="_blank" rel="noopener" style="color:#ffdb25;text-decoration:underline">abrir formulario directamente ↗</a>.</p></div></div></div></section>
-<section class="faq" id="preguntas" data-section="faq"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">Preguntas frecuentes</div><h2 class="display">SIN ENREDOS.</h2></div></div><div class="faqgrid"><details><summary>¿Cuánto cuesta el envío?</summary><p>Envío dentro de Puerto Rico: $5 fijos por pedido. Entrega estimada de 2–3 días laborables desde el despacho, no garantizada. Fuera de Puerto Rico, hay que solicitar cotización.</p></details><details><summary>¿Los stickers son waterproof?</summary><p>Son diseños para sticker glossy; todavía estamos validando el acabado y resistencia. No prometemos que sean impermeables ni aptos para lavaplatos hasta hacer pruebas.</p></details><details><summary>¿Puedo repetir un sticker en el pack?</summary><p>¡Claro! Puedes escoger el mismo diseño varias veces; por ejemplo, 10 de «Yo apoyé a Nailah».</p></details><details><summary>¿Es mercancía oficial del club?</summary><p>No. NailahPR es un proyecto personal e independiente; no representamos oficialmente al club ni utilizamos su escudo.</p></details><details><summary>¿Puedo recoger gratis?</summary><p>Sí. Puedes recoger durante las prácticas de lunes o miércoles, o coordinar un recogido en Arecibo. Se confirma el punto y horario de forma privada. El recogido no lleva cargo de envío. Una vez solicitado no se cambia automáticamente; cualquier envío posterior necesita aprobación y cuesta $5.</p></details><details><summary>¿Cómo pago?</summary><p>Ahora mismo aceptamos solicitudes para confirmar disponibilidad y envío. No se solicita pago en esta página hasta completar el checkout seguro y la configuración de impuestos.</p></details><details><summary>¿Hacen pedidos para equipos?</summary><p>Sí podemos evaluar paquetes grandes y diseños adicionales. Usa el formulario e indica la cantidad y lo que buscas.</p></details></div></div></section>
+<section class="contact" id="contacto" data-section="order-request"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">Solicitud de pedido</div><h2 class="display">PÍDELO CON<br>TU FLOW.</h2></div><p>Estamos en prelaunch. Envío PR / EE. UU. $5 o recogido local GRATIS. Copia tu selección y solicita confirmación de disponibilidad antes de pagar.</p></div><div class="form-layout"><div class="instructions"><strong>¿Cómo funciona?</strong><ol><li>Escoge arriba tu paquete, diseños y método de entrega: $5 envío PR / EE. UU. o recogido local gratis.</li><li>Si eliges recogido local, indica lunes, miércoles o Arecibo y acepta el aviso importante.</li><li>Presiona «Copiar mi selección» y guarda el resumen con el total estimado.</li><li>Pega ese resumen en el campo «Selección exacta» del formulario.</li><li>En el formulario, selecciona el mismo método de entrega e incluye dirección postal SOLO si escoges envío. Confirmaremos disponibilidad y cualquier obligación fiscal antes de cobrar.</li></ol><label for="summaryText" style="font-size:12px;font-weight:800">Tu selección (cópiala al formulario)</label><textarea readonly id="summaryText" class="summary-box">Escoge tus stickers para generar tu resumen.</textarea><button id="copy" class="copybtn" type="button">📋 COPIAR MI SELECCIÓN</button><p id="copyStatus" role="status" style="font-size:11px;color:#d2e2fa"></p></div><div><script src="https://paymegpt.com/forms-embed.js" data-form="13sgccfa" data-theme="dark" data-accent="#1677ff" data-accent2="#ffda1f" data-bg="#0a1322" data-surface="#111e36" data-field="#192841" data-text="#f9fbff" data-gradient="0" async></script><noscript><a href="https://paymegpt.com/forms/13sgccfa">Abrir solicitud de pedido</a></noscript><p style="font-size:12px">Si el formulario no carga: <a href="https://paymegpt.com/forms/13sgccfa" target="_blank" rel="noopener" style="color:#ffdb25;text-decoration:underline">abrir formulario directamente ↗</a>.</p></div></div></div></section>
+<section class="faq" id="preguntas" data-section="faq"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">Preguntas frecuentes</div><h2 class="display">SIN ENREDOS.</h2></div></div><div class="faqgrid"><details><summary>¿Cuánto cuesta el envío?</summary><p>Envío a Puerto Rico y a los 50 estados de EE. UU.: $5 fijos por pedido. En Puerto Rico estimamos 2–3 días laborables tras despacho, no garantizados; en EE. UU. el tiempo depende del código postal y del transportista. Recogido en Arecibo gratis.</p></details><details><summary>¿Los stickers son waterproof?</summary><p>Son diseños para sticker glossy; todavía estamos validando el acabado y resistencia. No prometemos que sean impermeables ni aptos para lavaplatos hasta hacer pruebas.</p></details><details><summary>¿Puedo repetir un sticker en el pack?</summary><p>¡Claro! Puedes escoger el mismo diseño varias veces; por ejemplo, 10 de «Yo apoyé a Nailah».</p></details><details><summary>¿Es mercancía oficial del club?</summary><p>No. NailahPR es un proyecto personal e independiente; no representamos oficialmente al club ni utilizamos su escudo.</p></details><details><summary>¿Puedo recoger gratis?</summary><p>Sí. Puedes recoger durante las prácticas de lunes o miércoles, o coordinar un recogido en Arecibo. Se confirma el punto y horario de forma privada. El recogido no lleva cargo de envío. Una vez solicitado no se cambia automáticamente; cualquier envío posterior necesita aprobación y cuesta $5.</p></details><details><summary>¿Cómo pago?</summary><p>Ahora mismo aceptamos solicitudes para confirmar disponibilidad y envío. No se solicita pago en esta página hasta completar el checkout seguro y la configuración de impuestos.</p></details><details><summary>¿Hacen pedidos para equipos?</summary><p>Sí podemos evaluar paquetes grandes y diseños adicionales. Usa el formulario e indica la cantidad y lo que buscas.</p></details></div></div></section>
 <div id="mobileCart" class="mobile-cart" hidden><div><b id="mobileCartCount">0 de 10</b><span id="mobileCartPrice">$12 · mi pack</span></div><button type="button" id="mobileCartGo">VER MI PACK ↑</button></div></main>
-<footer class="footer"><div class="wrap footrow"><div><strong>NAILAHPR ✦</strong>Una idea con corazón de voleibol. Hecha en Arecibo, Puerto Rico.<br>Proyecto independiente de apoyo a gastos deportivos, no afiliado oficialmente con el club.</div><div>© <span id="year">2026</span> NailahPR. Precios de prueba · Envío PR $5 · Recogido GRATIS.<br><a href="https://paymegpt.com/forms/13sgccfa" target="_blank" rel="noopener">Contacto / solicitar pedido</a> · <a href="https://pr-botsai.github.io/nailahpr-store/politicas/" target="_blank" rel="noopener">Políticas y privacidad</a></div></div></footer>
+<footer class="footer"><div class="wrap footrow"><div><strong>NAILAHPR ✦</strong>Una idea con corazón de voleibol. Hecha en Arecibo, Puerto Rico.<br>Proyecto independiente de apoyo a gastos deportivos, no afiliado oficialmente con el club.</div><div>© <span id="year">2026</span> NailahPR. Precios de prueba · Envío PR + EE. UU. $5 · Recogido GRATIS.<br><a href="https://paymegpt.com/forms/13sgccfa" target="_blank" rel="noopener">Contacto / solicitar pedido</a> · <a href="https://pr-botsai.github.io/nailahpr-store/politicas/" target="_blank" rel="noopener">Políticas y privacidad</a></div></div></footer>
 <script>
 (function(){
 'use strict';
 
+
+var nailahLang='es';
+var translateDict={"Stickers":"Stickers","Arma tu pack":"Build your pack","Nuestra misión":"Our mission","Preguntas":"FAQ","ARMA TU PACK ↗":"BUILD YOUR PACK ↗","ENVÍOS PR + EE. UU. $5 · RECOGIDO ARECIBO GRATIS · ESTIMADOS SEGÚN DESTINO":"PR + U.S. SHIPPING $5 · FREE ARECIBO PICKUP · DELIVERY TIMES VARY","LA CANCHA":"THE COURT","TIENE":"HAS","ACTITUD.":"ATTITUDE.","TU JUEGO.":"YOUR GAME.","TU STICKER.":"YOUR STICKER.","ESCUCHO":"I HEAR","EL PUNTO":"THE POINT","TU ESTILO, TU JUEGO":"YOUR STYLE, YOUR GAME","ESCOGE TUS STICKERS ↗":"CHOOSE YOUR STICKERS ↗","CONOCE NUESTRA HISTORIA":"OUR STORY","📦 PR + EE. UU. $5":"📦 PR + U.S. $5","📍 Recogido GRATIS":"📍 FREE pickup","✨ Tamaño ~2.5″":"✨ Approx. 2.5″","ESCOGE CUALQUIER 10":"PICK ANY 10","STICKERS CON":"STICKERS WITH","PERSONALIDAD":"PERSONALITY","¡ARMA TU PACK!":"BUILD YOUR PACK!","Tú mandas en tu pack":"Your pack, your rules","Usa los botones + y − de las tarjetas para escoger tus diseños. Puedes repetir cualquiera.":"Use the + and − buttons on each card. You can choose the same sticker more than once.","1. Escoge el tamaño":"1. Choose your pack","UNO SOLO":"SINGLE","MINI PACK":"MINI PACK","ESCOGE 10":"PICK 10","PACK COMPLETO":"FULL PACK","2. Selecciona stickers arriba":"2. Choose your stickers above","Tus stickers seleccionados aparecerán aquí.":"Your selected stickers will appear here.","BORRAR TODO":"CLEAR ALL","Tu paquete":"Your pack","LIST@ PARA":"READY FOR","Elige tus stickers y cómo recibirlos. Se suman $5 solo cuando escoges envío a Puerto Rico o Estados Unidos.":"Choose your stickers and delivery option. We add $5 only for shipping to Puerto Rico or the United States.","Tu pedido, a tu manera":"Your order, your way","¿Cómo quieres recibirlo?":"How would you like your order?","Envío a domicilio":"Ship to me","Puerto Rico o Estados Unidos · tarifa fija":"Puerto Rico or the United States · flat rate","Recogido local":"Local pickup","Prácticas lunes/miércoles o Arecibo":"Monday/Wednesday practices or Arecibo","GRATIS":"FREE","Destino del envío / Shipping destination":"Shipping destination","📦 Envío PR + Estados Unidos":"📦 Shipping to PR + U.S.","Tarifa fija de ":"Flat fee of "," por pedido":" per order"," para Puerto Rico y los 50 estados de EE. UU. El estimado de ":" for Puerto Rico and all 50 U.S. states. The "," corresponde a Puerto Rico y no es una garantía. Para EE. UU., el plazo depende del código postal y del transportista; se confirma al gestionar el pedido. Las direcciones se solicitan en el formulario.":" estimate applies to Puerto Rico only and is not guaranteed. For U.S. deliveries, timing depends on ZIP code and carrier. The order form collects addresses.","Selecciona el lugar / día de recogido":"Choose pickup location / day","Escoge una opción...":"Select an option...","Práctica del lunes":"Monday practice","Práctica del miércoles":"Wednesday practice","En Arecibo — coordinar punto":"Arecibo — arrange pickup","IMPORTANTE: RECOGIDO NO SE CAMBIA AUTOMÁTICAMENTE.":"IMPORTANT: PICKUP CANNOT BE CHANGED AUTOMATICALLY.","Si eliges recogido, tu pedido será preparado para entrega en persona. Cualquier solicitud posterior de envío requiere aprobación y tendría un cargo de ":"When you choose pickup, your order will be prepared for collection in person. Switching to shipping later requires approval and costs ",". No anunciamos públicamente el lugar exacto de las prácticas; se coordina de forma privada.":". We don't publish youth practice locations; pickup is arranged privately.","Entiendo las condiciones de recogido local y el cargo de $5 si posteriormente se aprueba un envío.":"I understand the local pickup terms and the $5 fee if shipping is approved later.","Selecciona una opción para calcular tu total.":"Choose an option to calculate your total.","Subtotal de stickers":"Stickers subtotal","Entrega":"Delivery","Por elegir":"Select delivery","Total estimado*":"Estimated total*","*No se añade IVU por separado a este estimado. La obligación fiscal se revisará antes de activar cobros. Esta página aún no procesa pagos.":"*No separate IVU is added to this estimate. Tax obligations must be verified before payments go live.","Esta es una solicitud de pedido, no una compra ni pago confirmado. Aún estamos validando producción y envío.":"This is an order request, not a completed purchase. Production and delivery details are being confirmed.","¿Pedidos especiales o de equipo?":"Team or bulk orders?","Más que stickers":"More than stickers","UN SUEÑO.":"ONE DREAM.","MUCHAS":"BIG","GANAS.":"HEART.","QUIERO APOYAR ↗":"I WANT TO SUPPORT ↗","JUGAMOS":"WE PLAY","CON TODO.":"ALL IN.","APOYAMOS":"WE SUPPORT","CON MÁS.":"EVEN MORE.","Próximamente · En evaluación":"Coming soon · Under review","MÁS FLOW":"MORE GAME DAY","DE GAME DAY.":"ENERGY.","Hair Game":"Hair Game","Bag Charms":"Bag Charms","Game-Day Shine":"Game-Day Shine","Próximamente":"Coming soon","En evaluación":"Under review","Solicitud de pedido":"Order request","PÍDELO CON":"ORDER WITH","TU FLOW.":"YOUR FLOW.","¿Cómo funciona?":"How it works","Tu selección (cópiala al formulario)":"Your selection (copy into the form)","📋 COPIAR MI SELECCIÓN":"📋 COPY MY SELECTION","Si el formulario no carga: ":"If the form doesn't load: ","abrir formulario directamente ↗":"open the form ↗","Preguntas frecuentes":"Frequently asked questions","SIN ENREDOS.":"NO COMPLICATIONS.","¿Cuánto cuesta el envío?":"How much is shipping?","¿Los stickers son waterproof?":"Are the stickers waterproof?","¿Puedo repetir un sticker en el pack?":"Can I choose duplicates?","¿Es mercancía oficial del club?":"Is this official club merchandise?","¿Puedo recoger gratis?":"Can I pick up for free?","¿Cómo pago?":"How can I pay?","¿Hacen pedidos para equipos?":"Do you offer team orders?","Cargando colección...":"Loading collection...","Escoge tu pack":"Choose your pack","Revisar permisos":"Rights review","Vista previa":"Preview","~2.5″ · Die-cut":"~2.5″ · Die-cut"};
+function localizeText(s){if(!s)return s;var raw=s.trim();if(!raw)return s;var eng=translateDict[raw];if(!eng)return s;return s.replace(raw,eng);}
+function applyLanguage(){
+ document.documentElement.lang=nailahLang;
+ document.querySelectorAll('.lang-toggle button').forEach(function(b){var on=b.dataset.lang===nailahLang;b.classList.toggle('lang-active',on);b.setAttribute('aria-pressed',on?'true':'false');});
+ var nodes=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+ var n;
+ while((n=nodes.nextNode())){
+  var p=n.parentElement;if(!p||p.closest('script,style,textarea,svg,noscript'))continue;
+  if(n.__nailahES===undefined){n.__nailahES=n.nodeValue;}
+  var base=n.__nailahES;
+  var output=nailahLang==='en'?localizeText(base):base;
+  if(n.nodeValue!==output)n.nodeValue=output;
+ }
+ var search=document.getElementById('stickerSearch');
+ if(search)search.placeholder=nailahLang==='en'?'Search: spike, Nailah, 11U, point...':'Buscar: remate, Nailah, 11U, punto...';
+ var emailInput=document.getElementById('email');
+ if(emailInput)emailInput.placeholder=nailahLang==='en'?'you@example.com':'tu@correo.com';
+}
+document.querySelectorAll('.lang-toggle button').forEach(function(b){b.addEventListener('click',function(){nailahLang=this.dataset.lang;applyLanguage();update();});});
 var priceByPack={1:2,5:8,10:12,25:27};
 var pack=10,qty={},products=[],currentFilter='Todos',query='',deliveryMethod=null;
 var cards=document.getElementById('cards');
@@ -472,23 +570,26 @@ function deliveryReady(){
 }
 function deliveryFee(){return deliveryMethod==='shipping'?5:0;}
 function getDeliveryDescription(){
- if(deliveryMethod==='shipping')return 'ENVÍO A PUERTO RICO — tarifa fija $5. Entrega estimada 2–3 días laborables desde el despacho; NO garantizada.';
+ if(deliveryMethod==='shipping')return 'ENVÍO A '+(document.getElementById('shipRegion').value==='US'?'ESTADOS UNIDOS':'PUERTO RICO')+' — tarifa fija $5 por pedido. PR: estimado 2–3 días laborables desde despacho (no garantizado); US: plazo según destino/transportista.';
  if(deliveryMethod==='pickup')return 'RECOGIDO LOCAL GRATIS — '+(document.getElementById('pickupSlot').value||'día por escoger')+'. No se cambia automáticamente. Cualquier envío posterior requiere aprobación y cargo de $5.';
  return 'MÉTODO DE ENTREGA SIN SELECCIONAR';
 }
+
 function summary(){
  var lines=products.filter(function(p){return qty[p.id]>0;}).map(function(p){return qty[p.id]+' × '+p.name+' ['+p.file+']';});
  var subtotal=priceByPack[pack],total=subtotal+deliveryFee();
+ var address=deliveryMethod==='shipping'?['shipName','shipLine','shipCity','shipZip'].map(function(id){return document.getElementById(id).value.trim();}).join(', '):'RECOGIDO LOCAL / NO ENVÍO';
  return 'NAILAHPR — SOLICITUD DE STICKERS\n'
  +'Paquete: '+pack+' stickers — $'+subtotal.toFixed(2)+'\n'
  +(lines.length?lines.join('\n'):'Sin selección todavía')
  +'\nCantidad escogida: '+count()+'/'+pack
  +'\nMÉTODO: '+getDeliveryDescription()
+ +'\nDESTINATARIO / SHIPPING ADDRESS: '+address
  +'\nSubtotal de stickers: $'+subtotal.toFixed(2)
  +'\nCosto de entrega: '+(deliveryMethod?(deliveryMethod==='pickup'?'GRATIS / $0.00':'$5.00'):'SIN DEFINIR')
- +'\nTOTAL ESTIMADO ANTES DE IVU: '+(deliveryMethod?'$'+total.toFixed(2):'PENDIENTE')
+ +'\nTOTAL DEL PEDIDO (SIN IVU ADICIONAL EN ESTIMADO): '+(deliveryMethod?'$'+total.toFixed(2):'PENDIENTE')
  +'\nConfirmación de condiciones de recogido: '+(deliveryMethod==='pickup'?(document.getElementById('pickupAck').checked?'ACEPTADAS':'PENDIENTE'):'NO APLICA')
- +'\nSolicitud no pagada. IVU aplicable, producción y disponibilidad se confirman antes de cobrar.'
+ +'\nSolicitud no pagada. El tratamiento fiscal y la disponibilidad deberán verificarse antes de procesar la venta.'
  +'\nProyecto independiente. No es mercancía oficial del club.';
 }
 function update(){
@@ -504,8 +605,15 @@ function update(){
  document.getElementById('summaryTotal').textContent=methodSelected?'$'+(subtotal+shipping).toFixed(2):'—';
  document.getElementById('shipDetails').hidden=deliveryMethod!=='shipping';
  document.getElementById('pickupDetails').hidden=deliveryMethod!=='pickup';
+ document.getElementById('shippingAddressGroup').hidden=deliveryMethod!=='shipping';
+ document.getElementById('stripeAmount').textContent=methodSelected?'$'+(subtotal+shipping).toFixed(2):'—';
+ var payBtn=document.getElementById('payNow'),em=document.getElementById('email');
+ var hasEmail=em.checkValidity()&&em.value.trim().length>0;
+ var shipComplete=deliveryMethod!=='shipping'||['shipName','shipLine','shipCity','shipZip'].every(function(id){return document.getElementById(id).value.trim().length>0;});
+ payBtn.disabled=!(c===pack&&ready&&hasEmail&&shipComplete);
+ document.getElementById('payNowText').textContent=payBtn.disabled?(nailahLang==='en'?'COMPLETE PACK, DELIVERY & EMAIL':'COMPLETA PACK, ENTREGA Y CORREO'):(nailahLang==='en'?'PAY $':'PAGAR $')+(subtotal+shipping).toFixed(2)+' '+(nailahLang==='en'?'SECURELY':'SEGURO');
  var hint=document.getElementById('deliveryHint');
- hint.textContent=deliveryMethod==='shipping'?'📦 Envío a Puerto Rico: $5. Entrega estimada 2–3 días laborables desde despacho (no garantizado).'
+ hint.textContent=deliveryMethod==='shipping'?(document.getElementById('shipRegion').value==='US'?'📦 Envío a Estados Unidos: $5. Plazo según código postal y transportista.':'📦 Envío a Puerto Rico: $5. Entrega estimada 2–3 días laborables desde despacho (no garantizado).')
   :deliveryMethod==='pickup'?(ready?'✅ Recogido gratis confirmado. ¡Sin cargo de envío!':'⚠️ Elige el día/lugar de recogido y acepta el aviso.')
   :'Escoge envío por $5 o recogido GRATIS para continuar.';
  document.getElementById('summaryText').value=summary();
@@ -516,11 +624,11 @@ function update(){
   var sel=Number(b.dataset.pack)===pack;
   b.classList.toggle('active',sel);b.setAttribute('aria-pressed',String(sel));
  });
- var cart=document.getElementById('mobileCart');
- cart.hidden=!c;
+ var cart=document.getElementById('mobileCart');cart.hidden=!c;
  document.getElementById('mobileCartCount').textContent=c+' de '+pack+' stickers';
  document.getElementById('mobileCartPrice').textContent=methodSelected?'$'+(subtotal+shipping).toFixed(2)+' · '+(deliveryMethod==='pickup'?'recogido GRATIS':'envío incluido'):'$'+subtotal.toFixed(2)+' + entrega';
  renderCards();
+ applyLanguage();
 }
 function openZoom(id){
  var p=products.find(function(x){return x.id===id;});if(!p)return;
@@ -568,8 +676,25 @@ document.querySelectorAll('input[name="deliveryOption"]').forEach(function(input
  });
 });
 document.getElementById('pickupSlot').addEventListener('change',update);
+document.getElementById('shipRegion').addEventListener('change',update);
 document.getElementById('pickupAck').addEventListener('change',update);
+['email','shipName','shipLine','shipCity','shipZip'].forEach(function(id){document.getElementById(id).addEventListener('input',update);});
+document.getElementById('payNow').addEventListener('click',async function(){
+ var c=count(),amount=priceByPack[pack]+deliveryFee(),em=document.getElementById('email');
+ if(c!==pack||!deliveryReady()||!em.checkValidity()){document.getElementById('stripeStatus').textContent=nailahLang==='en'?'Complete the pack, delivery details and valid email first.':'Completa tu pack, la entrega y un correo válido primero.';return;}
+ if(deliveryMethod==='shipping'&&!['shipName','shipLine','shipCity','shipZip'].every(function(id){return document.getElementById(id).value.trim().length>0;})){document.getElementById('stripeStatus').textContent='Completa la dirección de envío.';return;}
+ if(typeof window.__processDonation!=='function'){document.getElementById('stripeStatus').textContent=nailahLang==='en'?'Secure payment is not available yet. Use the order request form.':'El pago seguro aún no está disponible. Usa el formulario de pedido.';return;}
+ var items=products.filter(function(p){return qty[p.id]>0;}).map(function(p){return {name:p.name,sku:p.file,quantity:qty[p.id]};});
+ var details=summary();
+ try{
+  this.disabled=true;document.getElementById('stripeStatus').textContent=nailahLang==='en'?'Opening secure Stripe checkout...':'Abriendo pago seguro de Stripe...';
+  var args={amount:amount,email:em.value.trim(),name:'NailahPR · '+pack+' stickers',itemName:'NailahPR · '+pack+' stickers',description:details,message:details,items:items,shipping:deliveryMethod,shippingAddress:deliveryMethod==='shipping'?{name:document.getElementById('shipName').value.trim(),line1:document.getElementById('shipLine').value.trim(),city:document.getElementById('shipCity').value.trim(),postal_code:document.getElementById('shipZip').value.trim(),country:document.getElementById('shipRegion').value==='US'?'US':'PR'}:null};
+  await window.__processDonation(args);
+ }catch(e){document.getElementById('stripeStatus').textContent=nailahLang==='en'?'Stripe checkout could not open. Please try again or use the order form.':'No se pudo abrir Stripe. Intenta de nuevo o utiliza el formulario de pedido.';update();}
+});
+
 document.getElementById('year').textContent=new Date().getFullYear();
+applyLanguage();
 update();
 loadProducts();
 
