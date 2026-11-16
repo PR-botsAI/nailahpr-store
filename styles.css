@@ -112,3 +112,37 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
 .stripe-status{color:#d7e4f5!important;font-size:10px!important;margin:10px 0 0!important}
 .checkout-fineprint{font-size:10px!important;line-height:1.45!important;color:#b8cbe5!important;margin:8px 0 0!important}
 .checkout-fineprint a{text-decoration:underline;color:#ffe236}
+
+/* NAILAHPR PERSONAL SUPPORT / NOT MERCHANDISE CHECKOUT */
+.support-strip{padding:34px 0 30px;overflow:hidden;position:relative;background:linear-gradient(115deg,#0f2466 0%,#005ec6 48%,#0a1b41 100%);border-bottom:5px solid #ffdf23}
+.support-strip::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(113deg,transparent 0 58px,#ffffff0d 59px 63px);pointer-events:none}
+.support-shell{position:relative;display:grid;grid-template-columns:1.3fr .7fr;align-items:center;min-height:270px;gap:20px}
+.support-copy{position:relative;z-index:2}.support-kicker{font-weight:900;font-size:11px;letter-spacing:.17em;color:#ffe63b}
+.support-copy h2{font:900 clamp(39px,6.8vw,80px)/.93 'Barlow Condensed',Impact,sans-serif;margin:12px 0 13px;letter-spacing:.01em;text-shadow:0 5px 0 #06122a}
+.support-copy h2 span{color:#ffdc21}.support-lead{max-width:670px;color:#e7f1ff;font-size:14px;line-height:1.45;margin:0 0 20px}
+.support-actions{display:flex;gap:11px;flex-wrap:wrap}.support-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 18px;border:2px solid #ffdf21;border-radius:13px;font:900 12px 'DM Sans',sans-serif;letter-spacing:.04em;transition:transform .16s,box-shadow .16s,background .16s;cursor:pointer;text-align:center}
+.support-cta:hover{transform:translateY(-3px);box-shadow:0 7px 0 #06122a}
+.support-cta-primary{color:#08172d;background:#ffe028}.support-cta-outline{color:#fff;background:#0c193d}
+.support-micro{font-size:10px;color:#d2e5ff;margin:17px 0 0;max-width:630px}
+.support-visual{position:relative;display:grid;place-items:center;height:250px}
+.support-ring{width:210px;height:210px;border:11px solid #ffdf21;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-11deg);background:radial-gradient(circle at 34% 28%,#2879e5,#0a1841 70%);box-shadow:0 0 0 13px #ffffff26,0 18px 70px #030b2499;animation:supportFloat 4s ease-in-out infinite}
+.support-ring strong{font:900 140px/.8 'Barlow Condensed';color:#fff;text-shadow:6px 7px 0 #0754d0,-3px -3px 0 #ffdc21}.support-ring span{font-weight:1000;letter-spacing:.2em;color:#ffda21;font-size:17px}
+.support-spark{position:absolute;font-size:37px;filter:drop-shadow(0 5px 5px #061a51)}.support-spark.s1{top:10px;left:16%}.support-spark.s2{bottom:8px;right:9%}.support-spark.s3{top:12px;right:7%}
+@keyframes supportFloat{50%{transform:rotate(-8deg) translateY(-8px)}}
+.personal-panel{padding:62px 0;background:radial-gradient(circle at 20% 5%,#163778,#0b1428 66%);border-bottom:1px solid #3a4e78}
+.personal-shell{display:grid;grid-template-columns:1.3fr .7fr;gap:38px;align-items:center}
+.personal-info h2{font-size:clamp(43px,6vw,73px);margin:14px 0 15px}.personal-info>p{font-size:13px;color:#c4d7f2;line-height:1.6;max-width:720px}
+.personal-presets{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 16px}.amountchip{padding:10px 22px;border:1px solid #466ca0;background:#142a4f;color:#fff;border-radius:999px;font-weight:900;font-size:17px;min-width:77px}
+.amountchip.active{color:#061429;background:#ffe024;border-color:#ffe024}.amountchip:hover{border-color:#ffe024}
+.support-input-label{display:block;font-size:12px;font-weight:900;margin:14px 0 7px}.support-input{display:flex;align-items:center;width:min(320px,100%);border:2px solid #5374a3;border-radius:12px;background:#0e1e3c;overflow:hidden}
+.support-input span{font:900 26px 'Barlow Condensed';padding:8px 0 8px 14px;color:#ffe22f}
+.support-input input{min-width:0;width:100%;background:none;color:#fff;border:0;outline:0;padding:10px;font:900 24px 'DM Sans';font-variant-numeric:tabular-nums}
+.support-pay-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.support-ath{background:#ff8c00;border-color:#ffac38;color:#071522}.support-copy-amount{color:#e5f3ff;border-color:#5478ac;background:#14294a}
+.ath-status{font-weight:700;font-size:11px!important;color:#ffdf2f!important}.support-disclaimer{border-left:4px solid #ffe024;padding:9px 13px;background:#ffffff0b;border-radius:0 9px 9px 0;font-size:11px!important;color:#e1eaf9!important}
+.ath-card{padding:20px;background:#f4f7fd;color:#101826;border:5px solid #ff8c00;border-radius:27px;box-shadow:14px 16px 0 #0008;max-width:365px;justify-self:center;width:100%;display:flex;align-items:center;flex-direction:column;gap:7px}
+.ath-card-head{display:flex;align-items:center;gap:9px;width:100%;font-size:23px;font-weight:1000}.ath-card-head span{font-size:28px}.ath-card-head div{display:flex;flex-direction:column;line-height:1.1}.ath-card-head small{font-size:11px;font-weight:700;color:#626875}
+.ath-qr{width:100%;aspect-ratio:1/1;display:grid;place-items:center;background:#fff;border-radius:14px;padding:10px;border:1px solid #d7dce9;margin:12px 0}.ath-qr img,.ath-qr canvas{max-width:100%;height:auto!important;width:100%!important;image-rendering:pixelated}.ath-qr>span{font-size:12px;text-align:center;color:#576477}
+.ath-card-number{font:900 27px 'Barlow Condensed';letter-spacing:.05em}.ath-card-sub{font-size:11px;color:#596a7e;text-align:center}.ath-card-link{font-weight:900;font-size:12px;color:#0c57ab;text-decoration:underline;margin-top:5px}
+@media(max-width:770px){.support-shell,.personal-shell{grid-template-columns:1fr}.support-strip{padding:27px 0}.support-visual{display:none}.support-copy h2{font-size:clamp(44px,10vw,70px)}.personal-panel{padding:42px 0}.ath-card{justify-self:start}.support-actions .support-cta{flex:1}}
+@media(prefers-reduced-motion:reduce){.support-ring{animation:none}.support-cta:hover{transform:none}}
+.gift-note{display:inline-block;border:2px solid #ffe12e;color:#ffe94d;background:#133568;padding:10px 14px;border-radius:11px;font-weight:900;font-size:12px;line-height:1.5;margin:0 0 16px;text-transform:uppercase}
