@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://pr-botsai.github.io/nailahpr-store/assets/stickers/</loc>
+    <lastmod>2026-11-16T19:08:41.223Z</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
     <loc>https://pr-botsai.github.io/nailahpr-store/</loc>
     <lastmod>2026-11-16T19:08:35.833Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -13,11 +18,6 @@
   <url>
     <loc>https://pr-botsai.github.io/nailahpr-store/gracias/</loc>
     <lastmod>2026-11-16T19:06:23.322Z</lastmod>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://pr-botsai.github.io/nailahpr-store/assets/stickers/</loc>
-    <lastmod>2026-11-16T19:06:17.126Z</lastmod>
     <changefreq>weekly</changefreq>
   </url>
 </urlset>
