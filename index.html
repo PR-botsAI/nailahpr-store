@@ -752,42 +752,44 @@ document.getElementById('payNow').addEventListener('click',async function(){
 });
 
 
-/* ATH MOVIL: PERSONAL SUPPORT ONLY. This does not process merchandise orders. */
+/* ATH MOVIL: PERSONAL SUPPORT ONLY — no merchandise checkout or automated payment verification */
 (function(){
- var d=document.getElementById('personalAmount'),q=document.getElementById('athQR'),s=document.getElementById('athStatus');
- if(!d||!q)return;
- function syncAmount(){
-  var v=Number(d.value);
-  document.querySelectorAll('.amountchip').forEach(function(c){c.classList.toggle('active',Number(c.dataset.amount)===v)});
-  s.textContent=(Number.isFinite(v)&&v>=1)?'Aporte personal seleccionado: 
-applyLanguage();
-update();
-loadProducts();
-
-})();
-</script>
-<script src="https://paymegpt.com/widget.js" data-widget="21958343" async></script>
-</body></html>+v.toFixed(2)+'. Verifica el monto y destinatario en ATH Móvil; no se transfiere automáticamente.':'Indica un monto válido. Debes ingresarlo manualmente en ATH Móvil.';
+ var amountInput=document.getElementById('personalAmount');
+ var qrContainer=document.getElementById('athQR');
+ var status=document.getElementById('athStatus');
+ if(!amountInput||!qrContainer||!status)return;
+ function currentAmount(){return Number(amountInput.value);}
+ function syncSupportAmount(){
+  var v=currentAmount();
+  document.querySelectorAll('.amountchip').forEach(function(chip){
+   chip.classList.toggle('active',Number(chip.dataset.amount)===v);
+  });
+  status.textContent=Number.isFinite(v)&&v>=1
+   ? 'Aporte seleccionado: '+v.toFixed(2)+' USD. Verifica el monto y destinatario al abrir ATH Móvil.'
+   : 'Escribe un monto válido. Tendrás que introducirlo manualmente en ATH Móvil.';
  }
- document.querySelectorAll('.amountchip').forEach(function(c){c.addEventListener('click',function(){d.value=this.dataset.amount;syncAmount()})});
- d.addEventListener('input',syncAmount);
+ document.querySelectorAll('.amountchip').forEach(function(chip){
+  chip.addEventListener('click',function(){amountInput.value=chip.dataset.amount;syncSupportAmount();});
+ });
+ amountInput.addEventListener('input',syncSupportAmount);
  document.getElementById('copyAthAmount').addEventListener('click',function(){
-  var v=Number(d.value);if(!Number.isFinite(v)||v<1){syncAmount();return;}
-  var out='
-applyLanguage();
-update();
-loadProducts();
-
-})();
-</script>
-<script src="https://paymegpt.com/widget.js" data-widget="21958343" async></script>
-</body></html>+v.toFixed(2);
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(function(){s.textContent='Monto '+out+' copiado. Abre ATH Móvil y verifica el destinatario.'}).catch(function(){s.textContent='Monto a ingresar manualmente: '+out})}
-  else{s.textContent='Monto a ingresar manualmente: '+out}
+  var v=currentAmount();
+  if(!Number.isFinite(v)||v<1){syncSupportAmount();return;}
+  var out='USD '+v.toFixed(2);
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+   navigator.clipboard.writeText(out).then(function(){
+    status.textContent='Monto copiado: '+out+'. Verifica el destinatario en ATH Móvil.';
+   }).catch(function(){status.textContent='Monto para introducir manualmente: '+out;});
+  }else{status.textContent='Monto para introducir manualmente: '+out;}
  });
  var link=document.getElementById('athOpen').href;
- if(typeof QRCode!=='undefined'){try{q.innerHTML='';new QRCode(q,{text:link,width:270,height:270,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M})}catch(e){q.textContent='Para apoyar, abre el enlace ATH Móvil en tu teléfono.'}}
- syncAmount();
+ if(typeof QRCode!=='undefined'){
+  try{
+   qrContainer.innerHTML='';
+   new QRCode(qrContainer,{text:link,width:270,height:270,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+  }catch(err){qrContainer.textContent='Abre el enlace de ATH Móvil desde tu celular.';}
+ }
+ syncSupportAmount();
 })();
 
 document.getElementById('year').textContent=new Date().getFullYear();
