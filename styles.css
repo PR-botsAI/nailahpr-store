@@ -94,3 +94,21 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
 .futurecard{transition:transform .22s,border-color .22s}.futurecard:hover{transform:translateY(-5px);border-color:#ffdf22}
 @media(max-width:680px){.delivery-container{padding:14px}.builder-aside{padding:17px}.hero-circle{animation-duration:8s}.floating-tag{animation:none}.delivery-title h4{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.hero-circle,.floating-tag{animation:none!important}.story-card:hover,.futurecard:hover,.card:hover,.delivery-option:hover{transform:none!important}*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+.lang-toggle{display:flex;align-items:center;gap:3px;border:1px solid #4b6a99;border-radius:999px;padding:4px;background:#0d1b33;flex-shrink:0}.lang-toggle button{font-weight:900;font-size:12px;padding:7px 10px;background:none;border:0;color:#a3bee0;border-radius:999px}.lang-toggle button.lang-active{background:#ffe126;color:#081428;box-shadow:0 2px 5px #0005}.lang-toggle button:focus-visible{outline:2px solid #ffe126}#shipRegion{display:block;width:100%;padding:12px 10px;border-radius:10px;border:1px solid #5b7dac;background:#182b49;color:#fff;font:700 12px 'DM Sans',sans-serif}@media(max-width:680px){.nav{gap:8px}.lang-toggle button{padding:6px 9px;font-size:11px}.navcta{white-space:nowrap;font-size:10px;padding:9px 10px}}
+.checkout-panel{margin-top:16px;padding:17px;border:1px solid #668ed1;border-radius:16px;background:linear-gradient(145deg,#20416e,#101e39 66%);box-shadow:0 16px 35px #0003}
+.checkout-header{display:flex;gap:12px;align-items:start;margin-bottom:13px}.checkout-header>span{font-size:25px;line-height:1.5}
+.checkout-header strong{font:900 21px 'Barlow Condensed',sans-serif;letter-spacing:.035em;color:#ffe138}.checkout-header p{margin:3px 0 0!important;color:#e1ecff;font-size:11px!important}
+.checkout-label,.shipping-address label{font-size:11px;display:block;font-weight:800;color:#ecf2ff;margin:7px 0 5px}
+.checkout-panel input{width:100%;background:#09172d;border:1px solid #6887b5;border-radius:10px;padding:12px 11px;color:#fff;font:600 12px 'DM Sans',sans-serif;outline:none}
+.checkout-panel input:focus{border-color:#ffe338;box-shadow:0 0 0 3px #ffe33822}
+.checkout-panel input::placeholder{color:#91a6c5}
+.shipping-address{margin:12px 0;padding:13px;border:1px solid #44638a;border-radius:11px;background:#0b1b35}
+.shipping-address[hidden]{display:none}.shipping-address-title{font-size:13px;color:#ffdf33}
+.ship-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.shipping-address p{font-size:10px!important;color:#c8d5e8}
+.checkout-calc{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:13px 0 10px;font-size:12px;color:#d7e9ff}.checkout-calc strong{font:900 31px 'Barlow Condensed';color:#ffe136}
+.stripe-pay{display:flex;width:100%;align-items:center;justify-content:center;gap:9px;background:#ffe034;color:#0b1422;border:0;border-radius:12px;min-height:52px;font:900 15px 'DM Sans',sans-serif;box-shadow:0 5px 0 #172139;transition:transform .17s,box-shadow .17s}
+.stripe-pay:enabled:hover{transform:translateY(-2px);background:#fff06e}.stripe-pay:enabled:active{transform:translateY(4px);box-shadow:0 1px 0 #172139}
+.stripe-pay:disabled{background:#7486a1;color:#e4ebf4;cursor:not-allowed;box-shadow:none}
+.stripe-status{color:#d7e4f5!important;font-size:10px!important;margin:10px 0 0!important}
+.checkout-fineprint{font-size:10px!important;line-height:1.45!important;color:#b8cbe5!important;margin:8px 0 0!important}
+.checkout-fineprint a{text-decoration:underline;color:#ffe236}
