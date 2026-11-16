@@ -692,6 +692,8 @@ document.getElementById('payNow').addEventListener('click',async function(){
  var email=em.value.trim();
  var orderTitle='NailahPR '+pack+' stickers · '+(deliveryMethod==='pickup'?'Recogido':'Envío');
  var note='Orden: '+pack+' stickers. '+(deliveryMethod==='pickup'?'Recogido '+document.getElementById('pickupSlot').value:'Envío '+document.getElementById('shipRegion').value+' $5')+'.';
+ var designCodes=products.filter(function(p){return qty[p.id]>0;}).map(function(p){return String(p.order)+':'+qty[p.id];}).join(',');
+ note+=' Diseños/cantidades: '+designCodes+'.';
  if(deliveryMethod==='shipping'){
   note+=' Destino: '+document.getElementById('shipCity').value.trim()+' / '+document.getElementById('shipZip').value.trim()+'.';
  }
@@ -704,7 +706,7 @@ document.getElementById('payNow').addEventListener('click',async function(){
    amount:Number(amount.toFixed(2)),
    email:email,
    productName:orderTitle,
-   item_name:orderTitle,
+   name:customer,
    message:note
   });
 
