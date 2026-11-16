@@ -490,7 +490,7 @@ var stickerNames={
 function safe(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function count(){return Object.values(qty).reduce(function(a,b){return a+b;},0);}
 function titleFromFile(filename){
- var n=filename.match(/Nailah Sticker Pack \((\d+)\)/i);
+ var n=filename.match(/Nailah Stikcer Pack \((\d+)\)/i);
  if(n&&stickerNames[Number(n[1])])return stickerNames[Number(n[1])];
  if(/Shamrock Slam/i.test(filename))return 'Nailah #8 · Chicago / Shamrock Slam';
  if(/Challenge Sticker-1/i.test(filename))return 'Nailah #8 · Ángel Matos / San Juan';
@@ -500,7 +500,7 @@ function titleFromFile(filename){
  return filename.replace(/\.(png|webp|jpe?g)$/i,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
 }
 function toProduct(f){
- var n=f.name.match(/Nailah Sticker Pack \((\d+)\)/i);
+ var n=f.name.match(/Nailah Stikcer Pack \((\d+)\)/i);
  var named=(n?Number(n[1]):0);
  var tour=/(Shamrock Slam|Volleyball Challenge)/i.test(f.name);
  var title=titleFromFile(f.name);
