@@ -23,3 +23,51 @@ footer{padding:40px 0;background:#071021;border-top:1px solid #293b5a;font-size:
 @media(max-width:780px){.hero-inner,.flex2{grid-template-columns:1fr}.hero-inner{min-height:0;padding-top:38px;padding-bottom:38px}.art{display:none}.wall{grid-template-columns:repeat(2,minmax(0,1fr))}.heading{flex-direction:column;align-items:start}.steps{grid-template-columns:1fr}.section{padding:48px 0}.hero h1{font-size:clamp(60px,15vw,100px)}}
 @media(max-width:520px){nav .right{gap:7px}.navlink{padding:8px 10px;font-size:11px}.wall{grid-template-columns:1fr}.hero .ctas{flex-direction:column}.btn{width:100%}.formCard{padding:4px;min-height:430px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.message{transition:none}.message:hover,.btn:hover{transform:none}}
+
+/* Mobile first refresh: thumb-friendly, playful, smooth but lightweight. */
+:root{--tap:48px}
+html{scroll-padding-top:80px}
+body{background:radial-gradient(circle at 50% 0%,#173a7a 0%,#071224 46%);-webkit-font-smoothing:antialiased}
+.navlink,.lang button,.btn{min-height:var(--tap);display:inline-flex;justify-content:center;align-items:center}
+.btn{box-shadow:0 5px 0 #040b19;position:relative;overflow:hidden;transition:transform .22s ease,box-shadow .22s ease}
+.btn:hover{transform:translateY(-3px);box-shadow:0 8px 0 #020b1c}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #020b1c}
+.message{position:relative;overflow:hidden;border:1.5px solid #759bce;box-shadow:6px 7px 0 #030e2499;background:linear-gradient(140deg,#193966,#0c1b39);animation:popin .48s both}
+.message:before{content:"✦";position:absolute;right:15px;top:7px;color:#ffdf29;font-size:29px;opacity:.7}
+.message p{font-size:clamp(17px,2.4vw,21px);font-weight:700;line-height:1.45;overflow-wrap:anywhere}
+.message .footerline b{font-size:13px}
+.message .footerline small{color:#e2edff;font-size:10px}
+@keyframes popin{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.formCard{box-shadow:0 16px 42px #0005;overflow:visible}
+@media(max-width:780px){
+ html{scroll-padding-top:72px}
+ .wrap{padding-inline:17px}
+ .hero-inner{padding-top:30px;padding-bottom:35px}
+ .hero h1{font-size:clamp(56px,12.5vw,95px);letter-spacing:-.02em}
+ .hero p{font-size:15px}
+ .hero .ctas{gap:11px}
+ .hero .ctas .btn{width:100%;padding:15px 10px;font-size:13px}
+ .heading h2,.intro h2{font-size:clamp(44px,10vw,65px)}
+ .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ .step{padding:11px 9px;font-size:10px;line-height:1.35;min-height:86px}
+ .step b{font-size:26px}
+ .wall{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .formCard{min-height:420px}
+}
+@media(max-width:560px){
+ .wall{grid-template-columns:1fr;gap:16px}
+ nav{padding:14px 0}
+ .brand{font-size:28px}
+ .navlink{font-size:10px}
+ .section{padding-block:39px}
+ .heading{gap:6px}
+ .message{padding:20px;border-radius:18px}
+ .message p{font-size:20px}
+ .empty{padding:35px 16px;min-height:240px}
+ .formCard{padding:6px 3px;border-radius:16px}
+ .steps{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(prefers-reduced-motion:reduce){
+ .message{animation:none}
+ .btn{transition:none}
+}
