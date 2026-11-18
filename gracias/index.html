@@ -326,7 +326,7 @@
 </div><div class="art" aria-hidden="true"><div class="number"><strong>8</strong><small>NAILAH</small></div><span class="ball">🏐</span><span class="star">✦</span></div></div></section>
 <section class="section mural" id="muro" data-section="supporter-wall"><div class="wrap">
 <div class="heading"><div><div class="eyebrow" data-es="MENSAJES QUE EMPUJAN A SEGUIR" data-en="WORDS THAT KEEP HER GOING">MENSAJES QUE EMPUJAN A SEGUIR</div><h2 data-es="EL MURO<br><span>DE APOYO.</span>" data-en="THE SUPPORTER<br><span>WALL.</span>">EL MURO<br><span>DE APOYO.</span></h2></div><p data-es="Aquí celebramos a quienes apoyan a Nailah y comparten palabras bonitas. Solo publicamos nombres y mensajes autorizados y revisados; nunca direcciones, correos ni pagos." data-en="A place to celebrate Nailah's supporters and their kind words. We only publish reviewed, approved names and messages—never email addresses, payment details, or locations.">Aquí celebramos a quienes apoyan a Nailah y comparten palabras bonitas. Solo publicamos nombres y mensajes autorizados y revisados; nunca direcciones, correos ni pagos.</p></div>
-<div class="pills"><span class="pill" id="countSupporters">💛 0</span><span class="pill" data-es="✦ PUBLICACIÓN CON AUTORIZACIÓN" data-en="✦ OPT-IN PUBLICATION ONLY">✦ PUBLICACIÓN CON AUTORIZACIÓN</span></div>
+<div class="pills"><span class="pill" id="countSupporters">💛 1 mensaje</span><span class="pill" data-es="✦ PUBLICACIÓN CON AUTORIZACIÓN" data-en="✦ OPT-IN PUBLICATION ONLY">✦ PUBLICACIÓN CON AUTORIZACIÓN</span></div>
 <div id="supporterWall" class="wall" aria-live="polite"><div class="empty"><div class="sparkle">💛🏐</div><h3>¡ESTE MURO COMIENZA CONTIGO!</h3><p>Envía tus mejores deseos para Nailah. Los mensajes aparecerán aquí después de autorización, verificación y revisión.</p></div></div>
 </div></section>
 <section class="section message-section" id="deja-tu-mensaje" data-section="submit-supporter-message"><div class="wrap flex2">
@@ -348,7 +348,7 @@
    Never put email, address, payment references, or minors' data here.
    Form submissions are never automatically published.
 */
-const approvedSupporters=[];
+const approvedSupporters=[{name:"PAPA!",message:"Te Amo!",kind:"message",approved:true,verified:false}];
 const wall=document.getElementById('supporterWall');
 const count=document.getElementById('countSupporters');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
