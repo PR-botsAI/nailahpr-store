@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<!-- BASE:START (managed by Coding Agent — do not edit) -->
-<base href="/nailahpr-store/">
-<!-- BASE:END -->
+<script data-domain-base-fix>
+(function(){
+  var host=location.hostname.toLowerCase();
+  if(host==='nailahpr.com'||host==='www.nailahpr.com'){
+    var base=document.querySelector('base[href^="/nailahpr-store/"]');
+    if(base)base.setAttribute('href',base.getAttribute('href').replace(/^\/nailahpr-store\//,'/'));
+  }
+})();
+</script>
 
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="theme-color" content="#0a142a"/>
